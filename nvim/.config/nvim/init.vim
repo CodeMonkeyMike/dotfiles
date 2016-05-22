@@ -15,7 +15,7 @@ Plug 'StanAngeloff/php.vim', { 'for': 'php' }
 call plug#end()
 
 " To prevent issues with fish shell
-set shell=/bin/bash
+set shell=/bin/zsh
 
 " Force dark color scheme for gruvbox
 set background=dark
