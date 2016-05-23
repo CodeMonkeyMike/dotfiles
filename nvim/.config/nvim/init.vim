@@ -1,26 +1,8 @@
-call plug#begin()
-" Autoload plugins
-
-" Color schemes
-Plug 'morhetz/gruvbox'
-
-" Syntaxes and Language Specific tools
-Plug 'dag/vim-fish', { 'for': 'fish' }
-Plug 'elzr/vim-json', { 'for': 'javascript' }
-Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
-Plug 'othree/yajs.vim', { 'for': 'javascript' }
-Plug 'gavocanov/vim-js-indent', { 'for': 'javascript' }
-Plug 'StanAngeloff/php.vim', { 'for': 'php' }
-call plug#end()
-
 " To prevent issues with fish shell
-set shell=/bin/zsh
+set shell=/bin/bash
 
-" Force dark color scheme for gruvbox
-set background=dark
-
-" Colorscheme... duh
-colorscheme gruvbox
+" Good default colorscheme
+colorscheme ron
 
 " Turn off highlighting of :set hlsearch
 nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
@@ -70,17 +52,7 @@ set notimeout ttimeout ttimeoutlen=200
 " Command line height is two lines
 set cmdheight=2
 
-" Change vertical line to a solid pipe
-set fillchars+=vert:│
-
-" Make comments italic
-highlight Comment cterm=italic
-
 " @todo: put msg here
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-
-if has('path_extra')
-  setglobal tags-=./tags tags-=./tags; tags^=./tags;
-endif
 
 inoremap <C-U> <C-G>u<C-U>
