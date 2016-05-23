@@ -47,6 +47,7 @@ set ignorecase
 
 " Line number
 set relativenumber
+set number
 
 " Show information of command which is currently being run
 set showcmd
