@@ -1,6 +1,5 @@
 call plug#begin()
 " Autoload plugins
-Plug 'macros/matchit.vim'
 
 " Color schemes
 Plug 'morhetz/gruvbox'
