@@ -53,8 +53,7 @@ set relativenumber
 set showcmd
 
 " Cursor will remain in same place it was left after changing buffers
-" issue?
-" set nostartofline
+set nostartofline
 
 " Go to end of line will go to last character
 set virtualedit=onemore
