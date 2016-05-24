@@ -1,0 +1,13 @@
+# Adds the escape sequences for italic.
+#
+# Install:
+#
+#   tic tmux-256color-italic.terminfo
+#
+# Usage in .tmux.conf:
+#
+#   set-option -g default-terminal "tmux-256color-italic"
+#
+tmux-256color-italic|tmux with 256 colors and italic,
+        sitm=\ePtmux;\e\E[3m\e\\, ritm=\ePtmux;\e\E[23m\e\\,
+                use=screen-256color,
