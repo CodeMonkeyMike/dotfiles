@@ -1,23 +1,40 @@
 call plug#begin()
 " Autoload plugins
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-set rtp+=~/.fzf
-" Insert mode completion
-imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <C-x><c-l> <plug>(fzf-complete-line)
+Plug 'junegunn/fzf.vim'
+" {{{
+  set rtp+=~/.fzf
+  " Insert mode completion
+  imap <c-x><c-k> <plug>(fzf-complete-word)
+  imap <c-x><c-f> <plug>(fzf-complete-path)
+  imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+  imap <C-x><c-l> <plug>(fzf-complete-line)
 
-fun! s:fzf_root()
-  let path = finddir(".git", expand("%:p:h").";")
-  return fnamemodify(substitute(path, ".git", "", ""), ":p:h")
-endfun
+  fun! s:fzf_root()
+    let path = finddir(".git", expand("%:p:h").";")
+    return fnamemodify(substitute(path, ".git", "", ""), ":p:h")
+  endfun
 
-nnoremap <silent> <Leader>ff :exe 'Files ' . <SID>fzf_root()<CR>
+  nnoremap <silent> <Leader>ff :exe 'Files ' . <SID>fzf_root()<CR>
+" }}}
+
+
 
 " Color schemes
 Plug 'morhetz/gruvbox'
+" {{{
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
+  " Force dark color scheme for gruvbox
+  set background=dark
+
+  " Italics disabled by default
+  let g:gruvbox_italic=1
+
+  " Colorscheme... duh
+  colorscheme gruvbox
+
+" }}}
 " Syntaxes and Language Specific tools
 Plug 'dag/vim-fish', { 'for': 'fish' }
 Plug 'elzr/vim-json', { 'for': 'javascript' }
@@ -29,12 +46,6 @@ call plug#end()
 
 " To prevent issues with fish shell
 set shell=/bin/zsh
-
-" Force dark color scheme for gruvbox
-set background=dark
-
-" Colorscheme... duh
-colorscheme gruvbox
 
 " Turn off highlighting of :set hlsearch
 nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
