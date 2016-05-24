@@ -1,5 +1,19 @@
 call plug#begin()
 " Autoload plugins
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+set rtp+=~/.fzf
+" Insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <C-x><c-l> <plug>(fzf-complete-line)
+
+fun! s:fzf_root()
+  let path = finddir(".git", expand("%:p:h").";")
+  return fnamemodify(substitute(path, ".git", "", ""), ":p:h")
+endfun
+
+nnoremap <silent> <Leader>ff :exe 'Files ' . <SID>fzf_root()<CR>
 
 " Color schemes
 Plug 'morhetz/gruvbox'
