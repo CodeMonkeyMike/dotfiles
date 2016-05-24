@@ -4,7 +4,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 " {{{
   set rtp+=~/.fzf
-  " Insert mode completion
+
   imap <c-x><c-k> <plug>(fzf-complete-word)
   imap <c-x><c-f> <plug>(fzf-complete-path)
   imap <c-x><c-j> <plug>(fzf-complete-file-ag)
@@ -18,23 +18,9 @@ Plug 'junegunn/fzf.vim'
   nnoremap <silent> <Leader>ff :exe 'Files ' . <SID>fzf_root()<CR>
 " }}}
 
-
-
 " Color schemes
 Plug 'morhetz/gruvbox'
-" {{{
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-  " Force dark color scheme for gruvbox
-  set background=dark
-
-  " Italics disabled by default
-  let g:gruvbox_italic=1
-
-  " Colorscheme... duh
-  colorscheme gruvbox
-
-" }}}
 " Syntaxes and Language Specific tools
 Plug 'dag/vim-fish', { 'for': 'fish' }
 Plug 'elzr/vim-json', { 'for': 'javascript' }
@@ -43,6 +29,16 @@ Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'gavocanov/vim-js-indent', { 'for': 'javascript' }
 Plug 'StanAngeloff/php.vim', { 'for': 'php' }
 call plug#end()
+
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+" Force dark color scheme for gruvbox
+set background=dark
+
+" Italics disabled by default
+let g:gruvbox_italic=1
+
+colorscheme gruvbox
 
 " To prevent issues with fish shell
 set shell=/bin/zsh
