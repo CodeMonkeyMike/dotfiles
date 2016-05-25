@@ -21,9 +21,12 @@ Plug 'itchyny/lightline.vim'
 " {{{
 let g:lightline = {
       \ 'colorscheme': 'gruvbox',
+      \ 'separator': { 'left': '⮀', 'right': '⮂' },
+      \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
       \ }
 " }}}
 Plug 'edkolev/tmuxline.vim'
+Plug 'tpope/vim-surround'
 
 " Color schemes
 Plug 'morhetz/gruvbox'
