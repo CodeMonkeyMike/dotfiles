@@ -18,6 +18,7 @@ Plug 'junegunn/fzf.vim'
   nnoremap <silent> <Leader>ff :exe 'Files ' . <SID>fzf_root()<CR>
 " }}}
 Plug 'itchyny/lightline.vim'
+Plug 'tpope/vim-fugitive'
 " {{{
 let g:lightline = {
       \ 'colorscheme': 'gruvbox',
