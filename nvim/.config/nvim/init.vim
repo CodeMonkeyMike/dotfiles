@@ -17,6 +17,13 @@ Plug 'junegunn/fzf.vim'
 
   nnoremap <silent> <Leader>ff :exe 'Files ' . <SID>fzf_root()<CR>
 " }}}
+Plug 'itchyny/lightline.vim'
+" {{{
+let g:lightline = {
+      \ 'colorscheme': 'gruvbox',
+      \ }
+" }}}
+Plug 'edkolev/tmuxline.vim'
 
 " Color schemes
 Plug 'morhetz/gruvbox'
@@ -88,11 +95,14 @@ set smartindent
 " Timeout settings
 set notimeout ttimeout ttimeoutlen=200
 
-" Command line height is two lines
-set cmdheight=2
+" Command line height is two lines was 2
+set cmdheight=1
 
 " Change vertical line to a solid pipe
 set fillchars+=vert:│
+
+" Dont show what mode your in
+set noshowmode
 
 " Make comments italic
 highlight Comment cterm=italic
