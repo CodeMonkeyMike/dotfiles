@@ -1,8 +1,11 @@
 set encoding=utf-8
+
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
+
 call plug#begin()
 " Autoload plugins
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -25,14 +28,31 @@ Plug 'junegunn/fzf.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-fugitive'
 " {{{
-let g:lightline = {
-      \ 'colorscheme': 'gruvbox',
-      \ 'separator': { 'left': '', 'right': '' },
-      \ 'subseparator': { 'left': '', 'right': '' }
-      \ }
+  let g:lightline = {
+        \ 'colorscheme': 'gruvbox',
+        \ 'separator': { 'left': '', 'right': '' },
+        \ 'subseparator': { 'left': '', 'right': '' }
+        \ }
 " }}}
 Plug 'edkolev/tmuxline.vim'
 " {{{
+  inoremap <C-U> <C-G>u<C-U>
+  let g:tmuxline_preset = {
+        \'a'    : '#S',
+        \'b'    : '#W',
+        \'c'    : '#H',
+        \'win'  : '#I #W',
+        \'cwin' : '#I #W',
+        \'x'    : '%a',
+        \'y'    : '%R',
+        \'z'    : '%e %b %g'}
+
+  let g:tmuxline_separators = {
+      \ 'left'      : '',
+      \ 'left_alt'  : '',
+      \ 'right'     : '',
+      \ 'right_alt' : '',
+      \ 'space'     : ' '}
 " }}}
 Plug 'tpope/vim-surround'
 
@@ -126,20 +146,3 @@ if has('path_extra')
   setglobal tags-=./tags tags-=./tags; tags^=./tags;
 endif
 
-inoremap <C-U> <C-G>u<C-U>
-let g:tmuxline_preset = {
-      \'a'    : '#S',
-      \'b'    : '#W',
-      \'c'    : '#H',
-      \'win'  : '#I #W',
-      \'cwin' : '#I #W',
-      \'x'    : '%a',
-      \'y'    : '%R',
-      \'z'    : '%e %b %g'}
-
-let g:tmuxline_separators = {
-    \ 'left'      : '',
-    \ 'left_alt'  : '',
-    \ 'right'     : '',
-    \ 'right_alt' : '',
-    \ 'space'     : ' '}
