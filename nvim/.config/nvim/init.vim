@@ -1,3 +1,4 @@
+set encoding=utf-8
 call plug#begin()
 " Autoload plugins
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -22,28 +23,12 @@ Plug 'tpope/vim-fugitive'
 " {{{
 let g:lightline = {
       \ 'colorscheme': 'gruvbox',
-      \ 'separator': { 'left': '⮀', 'right': '⮂' },
-      \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+      \ 'separator': { 'left': '', 'right': '' },
+      \ 'subseparator': { 'left': '', 'right': '' }
       \ }
 " }}}
 Plug 'edkolev/tmuxline.vim'
 " {{{
-let g:tmuxline_preset = {
-      \'a'    : '#S',
-      \'b'    : '#W',
-      \'c'    : '#H',
-      \'win'  : '#I #W',
-      \'cwin' : '#I #W',
-      \'x'    : '%a',
-      \'y'    : '#W %R',
-      \'z'    : '#H'}
-let g:tmuxline_separators = {
-    \ 'left'      : '⮀',
-    \ 'left_alt'  : '⮁',
-    \ 'right'     : '⮂',
-    \ 'right_alt' : '⮃',
-    \ 'space'     : ' '}
-let g:tmuxline_theme = 'gruvbox'
 " }}}
 Plug 'tpope/vim-surround'
 
@@ -138,3 +123,19 @@ if has('path_extra')
 endif
 
 inoremap <C-U> <C-G>u<C-U>
+let g:tmuxline_preset = {
+      \'a'    : '#S',
+      \'b'    : '#W',
+      \'c'    : '#H',
+      \'win'  : '#I #W',
+      \'cwin' : '#I #W',
+      \'x'    : '%a',
+      \'y'    : '%R',
+      \'z'    : '%e %b %g'}
+
+let g:tmuxline_separators = {
+    \ 'left'      : '',
+    \ 'left_alt'  : '',
+    \ 'right'     : '',
+    \ 'right_alt' : '',
+    \ 'space'     : ' '}
