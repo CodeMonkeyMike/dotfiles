@@ -42,7 +42,7 @@ Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
 Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'gavocanov/vim-js-indent', { 'for': 'javascript' }
 Plug 'StanAngeloff/php.vim', { 'for': 'php' }
-Plug 'ekalinin/Dockerfile.vim'
+Plug 'ekalinin/Dockerfile.vim', { 'for': 'dockerfile' }
 call plug#end()
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
