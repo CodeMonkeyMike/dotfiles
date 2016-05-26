@@ -1,11 +1,8 @@
 # Search hidden files and directories
 hidden = true
 
-# Use as many concurrent finders as possible, this will lead the result disorder
-parallel = true
-
 # Ignore files/directories matching pattern
-ignore = [ ".git", "tmp", "node_modules", "bin" ]
+ignore = [ ".git", "tmp", "node_modules", "bin", ".gitattributes", "composer.lock", ".sql" ]
 
 color = true
 
