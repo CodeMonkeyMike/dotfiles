@@ -54,7 +54,10 @@ Plug 'edkolev/tmuxline.vim'
       \ 'space'     : ' '}
 " }}}
 Plug 'tpope/vim-surround'
-
+Plug 'Yggdroot/indentLine'
+" {{{
+let g:indentLine_char = '\u2022'
+" }}}
 " Color schemes
 Plug 'morhetz/gruvbox'
 
