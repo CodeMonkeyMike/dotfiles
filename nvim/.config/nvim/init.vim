@@ -25,7 +25,6 @@ endfun
 nnoremap <silent> <Leader>ff :exe 'Files ' . <SID>fzf_root()<CR>
 " }}}
 Plug 'itchyny/lightline.vim'
-Plug 'tpope/vim-fugitive'
 " {{{
 let g:lightline = {
     \ 'colorscheme': 'gruvbox',
@@ -177,7 +176,6 @@ let g:tmuxline_separators = {
     \ 'right_alt' : '',
     \ 'space'     : ' '}
 " }}}
-Plug 'tpope/vim-surround'
 Plug 'Yggdroot/indentLine'
 " {{{
 let g:indentLine_char = '·'
@@ -204,17 +202,23 @@ let g:NERDTreeIndicatorMapCustom = {
 " }}}
 Plug 'scrooloose/syntastic'
 " {{{
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-
 let g:syntastic_php_checkers = ['php']
+let g:syntastic_javascript_checkers = ['eslint']
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 " }}}
+Plug 'airblade/vim-gitgutter'
+" {{{
+let g:gitgutter_max_signs = 500
+let g:gitgutter_map_keys = 0
+" }}}
+
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
 
 " Color schemes
 Plug 'morhetz/gruvbox'
@@ -226,6 +230,13 @@ Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
 Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'gavocanov/vim-js-indent', { 'for': 'javascript' }
 Plug 'StanAngeloff/php.vim', { 'for': 'php' }
+" {{{
+let php_html_in_heredoc=0
+let php_html_load=0
+let php_sql_heredoc=0
+let g:sql_type_default='postgresql'
+let php_ignore_phpdoc=1
+" }}}
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'dockerfile' }
 call plug#end()
 
