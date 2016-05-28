@@ -316,9 +316,6 @@ set fillchars+=vert:│
 " Dont show what mode your in
 set noshowmode
 
-" Make comments italic
-highlight Comment cterm=italic
-
 " @todo: put msg here
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 
