@@ -17,10 +17,10 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <C-x><c-l> <plug>(fzf-complete-line)
 
-fun! s:fzf_root()
+function! s:fzf_root()
   let path = finddir(".git", expand("%:p:h").";")
   return fnamemodify(substitute(path, ".git", "", ""), ":p:h")
-endfun
+endfunction
 
 nnoremap <silent> <Leader>ff :exe 'Files ' . <SID>fzf_root()<CR>
 " }}}
@@ -138,7 +138,7 @@ endfunction
 let g:tagbar_status_func = 'TagbarStatusFunc'
 
 function! TagbarStatusFunc(current, sort, fname, ...) abort
-    let g:lightline.fname = a:fname
+  let g:lightline.fname = a:fname
   return lightline#statusline(0)
 endfunction
 
@@ -146,6 +146,7 @@ augroup AutoSyntastic
   autocmd!
   autocmd BufWritePost *.c,*.cpp call s:syntastic()
 augroup END
+
 function! s:syntastic()
   SyntasticCheck
   call lightline#update()
@@ -249,6 +250,7 @@ let php_ignore_phpdoc=1
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'dockerfile' }
 call plug#end()
 
+" Neovim 24bit color mode
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 " Force dark color scheme for gruvbox
@@ -257,9 +259,10 @@ set background=dark
 " Italics disabled by default
 let g:gruvbox_italic=1
 
+" Custom color scheme
 colorscheme gruvbox
 
-" To prevent issues with fish shell
+" Specify shell to prevent issues with fish shell
 set shell=/bin/bash
 
 " Turn off highlighting of :set hlsearch
