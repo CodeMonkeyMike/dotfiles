@@ -9,7 +9,7 @@ call plug#begin()
 " Autoload plugins
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-" {{{
+" {{{ fzf.vim config
 set rtp+=~/.fzf
 
 imap <c-x><c-k> <plug>(fzf-complete-word)
@@ -25,7 +25,7 @@ endfunction
 nnoremap <silent> <Leader>ff :exe 'Files ' . <SID>fzf_root()<CR>
 " }}}
 Plug 'itchyny/lightline.vim'
-" {{{
+" {{{ lightline.vim config
 let g:lightline = {
     \ 'colorscheme': 'gruvbox',
     \ 'active': {
@@ -155,10 +155,30 @@ endfunction
 let g:unite_force_overwrite_statusline = 0
 let g:vimfiler_force_overwrite_statusline = 0
 let g:vimshell_force_overwrite_statusline = 0
+" }}}
+" {{{ deoplete.nvim pre hook
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+" }}}
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+" {{{
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
 
+let deoplete#omni#input_patterns = {
+  \ 'php': '\w+|[^. \t]->\w*\|\w+::\w*'
+  \ }
+
+" Define keyword
+if !exists('g:deoplete#keyword_patterns')
+    let g:deoplete#keyword_patterns = {}
+endif
+
+let g:deoplete#keyword_patterns.default = '[a-zA-Z_]\w{2,}?'
 " }}}
 Plug 'edkolev/tmuxline.vim'
-" {{{
+" {{{ tmuxline.vim config
 inoremap <C-U> <C-G>u<C-U>
 let g:tmuxline_preset = {
     \'a'    : '#S',
@@ -177,18 +197,14 @@ let g:tmuxline_separators = {
     \ 'right_alt' : '',
     \ 'space'     : ' '}
 " }}}
-Plug 'Yggdroot/indentLine'
-" {{{
-let g:indentLine_char = '·'
-" }}}
 Plug 'scrooloose/nerdtree'
-" {{{
+" {{{ nerdtree config
 map <Leader>ft :NERDTreeToggle<CR>
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 " }}}
 Plug 'Xuyuanp/nerdtree-git-plugin'
-" {{{
+" {{{ nerdtree-git-plugin config
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "✹",
     \ "Staged"    : "✚",
@@ -201,29 +217,26 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Unknown"   : "?"
     \ }
 " }}}
-Plug 'scrooloose/syntastic'
+Plug 'neomake/neomake'
 " {{{
-let g:syntastic_php_checkers = ['php']
-let g:syntastic_javascript_checkers = ['eslint']
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+let g:neomake_php_maker = ['php']
+"let g:syntastic_javascript_checkers = ['eslint']
 " }}}
 Plug 'airblade/vim-gitgutter'
-" {{{
-let g:gitgutter_max_signs = 500
+" {{{ vim-gitgutter config
+let g:gitgutter_max_signs = 1000
 let g:gitgutter_map_keys = 0
 " }}}
-
+Plug 'Konfekt/FastFold'
+Plug 'fntlnz/atags.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
 
 " Color schemes
 Plug 'morhetz/gruvbox'
-" {{{
+" {{{ gruvbox config
 let g:gruvbox_bold = 1
 let g:gruvbox_italic = 1
 let g:gruvbox_underline = 1
@@ -239,31 +252,30 @@ Plug 'elzr/vim-json', { 'for': 'javascript' }
 Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
 Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'gavocanov/vim-js-indent', { 'for': 'javascript' }
-Plug 'StanAngeloff/php.vim', { 'for': 'php' }
-" {{{
-let php_html_in_heredoc=0
-let php_html_load=0
-let php_sql_heredoc=0
-let g:sql_type_default='postgresql'
-let php_ignore_phpdoc=1
-" }}}
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'dockerfile' }
+Plug 'Shougo/neco-vim', { 'for': 'vim' }
+Plug 'shawncplus/phpcomplete.vim', { 'for': 'php' }
+Plug 'StanAngeloff/php.vim', { 'for': 'php' }
+" {{{ php.vim config
+let php_folding = 1
+let php_sql_heredoc = 0
+let g:sql_type_default = 'postgresql'
+let b:sql_type_override = 'postgresql'
+let php_html_load = 0
+" }}}
 call plug#end()
 
-" Neovim 24bit color mode
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+" Specify shell to prevent issues with fish shell
+set shell=/bin/bash
 
 " Force dark color scheme for gruvbox
 set background=dark
 
-" Italics disabled by default
-let g:gruvbox_italic=1
+" Neovim 24bit color mode
+set termguicolors
 
 " Custom color scheme
 colorscheme gruvbox
-
-" Specify shell to prevent issues with fish shell
-set shell=/bin/bash
 
 " Turn off highlighting of :set hlsearch
 nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
@@ -279,11 +291,14 @@ inoremap JJ <Esc>`^
 cnoremap w!! %!sudo tee > /dev/null %
 
 " Silence the bells
-set noerrorbells visualbell t_vb=
-au GUIEnter * set visualbell t_vb=
+set noerrorbells visualbell
+au GUIEnter * set visualbell
 
 " Highlight matching brace
 set showmatch
+
+" Prevent word wrap on long lines
+set nowrap
 
 " Gods gift to humanity, case insensitive search
 set ignorecase
@@ -302,10 +317,18 @@ set nostartofline
 set virtualedit=onemore
 
 " Indent Settings
-set tabstop=2
-set shiftwidth=2
+set shiftwidth=4
+set tabstop=4
 set expandtab
 set smartindent
+
+autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 foldmethod=syntax
+autocmd FileType html setlocal shiftwidth=2 tabstop=2
+autocmd FileType vim setlocal shiftwidth=2 tabstop=2 foldmethod=marker
+autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
+autocmd FileType php setlocal shiftwidth=4 tabstop=4 foldmethod=syntax omnifunc=phpcomplete#CompletePHP
+autocmd FileType fish setlocal shiftwidth=4 tabstop=4
+"autocmd FileType gitcommit setlocal complete=.,kspell
 
 " Timeout settings
 set notimeout ttimeout ttimeoutlen=200
@@ -314,15 +337,28 @@ set notimeout ttimeout ttimeoutlen=200
 set cmdheight=1
 
 " Change vertical line to a solid pipe
-set fillchars+=vert:│
+set fillchars=vert:│,fold:┄
 
-" Dont show what mode your in
+" Dont show what mode your in command bar
 set noshowmode
 
 " @todo: put msg here
-set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+" set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+
+" For the spelling on text files
+set dictionary-=/usr/share/dict/words dictionary+=/usr/share/dict/words
 
 if has('path_extra')
   setglobal tags-=./tags tags-=./tags; tags^=./tags;
 endif
 
+" Deoplete tab-complete
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+let g:atags_build_commands_list = [
+    \ 'ag --php -g "" | ctags -L - --fields=+l -f tags.tmp',
+    \ 'awk "length($0) < 400" tags.tmp > tags',
+    \ 'rm tags.tmp'
+    \ ]
+
+" Atags generate tags on buffer save
+autocmd BufWritePost * call atags#generate()
