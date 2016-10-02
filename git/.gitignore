@@ -33,3 +33,8 @@
 ._*
 .Spotlight-V100
 .Trashes
+
+# Tags and Source Graphs #
+##########################
+tags
+tags.tmp

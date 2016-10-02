@@ -1,4 +1,8 @@
+" Because why not
 set encoding=utf-8
+
+" Specify shell to prevent issues with fish shell
+set shell=/bin/bash
 
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -164,18 +168,18 @@ endfunction
 Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 " {{{
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#file#enable_buffer_path = 1
 let g:deoplete#enable_smart_case = 1
+" let g:deoplete#omni_patterns = {}
+let g:deoplete#sources#padawan#add_parentheses = 1
 
-let deoplete#omni#input_patterns = {
-  \ 'php': '\w+|[^. \t]->\w*\|\w+::\w*'
-  \ }
+" let deoplete#omni#input_patterns = {
+  " \ 'php': '\w+|[^. \t]->\w*\|\w+::\w*'
+  " \ }
 
+  " \ 'php': '\h\w*\|[^- \t]->\w*'
 " Define keyword
-if !exists('g:deoplete#keyword_patterns')
-    let g:deoplete#keyword_patterns = {}
-endif
 
-let g:deoplete#keyword_patterns.default = '[a-zA-Z_]\w{2,}?'
 " }}}
 Plug 'edkolev/tmuxline.vim'
 " {{{ tmuxline.vim config
@@ -218,14 +222,14 @@ let g:NERDTreeIndicatorMapCustom = {
     \ }
 " }}}
 Plug 'neomake/neomake'
-" {{{
+" {{{ neomake config
 let g:neomake_php_maker = ['php']
-"let g:syntastic_javascript_checkers = ['eslint']
 " }}}
 Plug 'airblade/vim-gitgutter'
 " {{{ vim-gitgutter config
 let g:gitgutter_max_signs = 1000
 let g:gitgutter_map_keys = 0
+let g:gitgutter_realtime = 0
 " }}}
 Plug 'Konfekt/FastFold'
 Plug 'fntlnz/atags.vim'
@@ -254,7 +258,9 @@ Plug 'othree/yajs.vim', { 'for': 'javascript' }
 Plug 'gavocanov/vim-js-indent', { 'for': 'javascript' }
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'dockerfile' }
 Plug 'Shougo/neco-vim', { 'for': 'vim' }
-Plug 'shawncplus/phpcomplete.vim', { 'for': 'php' }
+Plug 'pbogut/deoplete-padawan', { 'for': 'php' }
+Plug 'mkusher/padawan.vim', { 'for': 'php' }
+let g:padawan#composer_command = "composer"
 Plug 'StanAngeloff/php.vim', { 'for': 'php' }
 " {{{ php.vim config
 let php_folding = 1
@@ -264,9 +270,6 @@ let b:sql_type_override = 'postgresql'
 let php_html_load = 0
 " }}}
 call plug#end()
-
-" Specify shell to prevent issues with fish shell
-set shell=/bin/bash
 
 " Force dark color scheme for gruvbox
 set background=dark
@@ -326,7 +329,7 @@ autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 foldmethod=syntax
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
 autocmd FileType vim setlocal shiftwidth=2 tabstop=2 foldmethod=marker
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
-autocmd FileType php setlocal shiftwidth=4 tabstop=4 foldmethod=syntax omnifunc=phpcomplete#CompletePHP
+autocmd FileType php setlocal shiftwidth=4 tabstop=4 foldmethod=syntax
 autocmd FileType fish setlocal shiftwidth=4 tabstop=4
 "autocmd FileType gitcommit setlocal complete=.,kspell
 
@@ -342,9 +345,6 @@ set fillchars=vert:│,fold:┄
 " Dont show what mode your in command bar
 set noshowmode
 
-" @todo: put msg here
-" set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-
 " For the spelling on text files
 set dictionary-=/usr/share/dict/words dictionary+=/usr/share/dict/words
 
@@ -359,6 +359,22 @@ let g:atags_build_commands_list = [
     \ 'awk "length($0) < 400" tags.tmp > tags',
     \ 'rm tags.tmp'
     \ ]
+
+if executable('ag')
+  " Use Ag over Grep
+  set grepprg=ag\ --nogroup\ --nocolor
+endif
+
+nnoremap <Leader>gs :Gstatus<CR>
+nnoremap <Leader>gc :Gcommit<CR>
+nnoremap <Leader>ga :Gwrite<CR>
+nnoremap <Leader>gr :Gread<CR>
+nnoremap <Leader>gp :Gpush<CR>
+nnoremap <Leader>gb :Gblame<CR>
+nnoremap <Leader>gd :Gdiff<CR>
+nnoremap <Leader>gl :Glog<CR>
+
+nnoremap <Leader>ps :call padawan#StartServer()<CR>
 
 " Atags generate tags on buffer save
 autocmd BufWritePost * call atags#generate()
