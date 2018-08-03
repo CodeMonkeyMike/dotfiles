@@ -5,16 +5,17 @@
 set encoding=utf-8
 scriptencoding utf-8
 
-set shell=/bin/bash
+" set shell=/bin/bash
+set shell=/usr/local/bin/bash
 
-set runtimepath+=/Users/mikez/.local/share/dein/repos/github.com/Shougo/dein.vim
+set runtimepath+=/Users/michaelzipf/.local/share/dein/repos/github.com/Shougo/dein.vim
 
 " Required:
-if dein#load_state('/Users/mikez/.local/share/dein')
-  call dein#begin('/Users/mikez/.local/share/dein')
+if dein#load_state('/Users/michaelzipf/.local/share/dein')
+  call dein#begin('/Users/michaelzipf/.local/share/dein')
 
   " Required:
-  call dein#add('/Users/mikez/.local/share/dein/repos/github.com/Shougo/dein.vim')
+  call dein#add('/Users/michaelzipf/.local/share/dein/repos/github.com/Shougo/dein.vim')
 
   " Colorschemes:
   call dein#add('morhetz/gruvbox')
@@ -36,11 +37,13 @@ if dein#load_state('/Users/mikez/.local/share/dein')
   call dein#add('elixir-lang/vim-elixir', {'on_ft': 'elixir'})
   call dein#add('mxw/vim-jsx', {'on_ft': 'javascript'})
   call dein#add('pangloss/vim-javascript', {'on_ft': 'javascript'})
+  call dein#add('vim-scripts/txt.vim', {'on_ft': 'txt'})
+  call dein#add('hdima/python-syntax', {'on_ft': 'python'})
+  call dein#add('fatih/vim-go', {'on_ft': 'go'})
 
   " Language specific tools
-  call dein#add('luochen1990/rainbow', {'on_ft': ['clojure', 'json']})
-  call dein#add('padawan-php/deoplete-padawan', {'on_ft': 'php'})
-  call dein#add('mkusher/padawan.vim', {'on_ft': 'php'})
+  call dein#add('luochen1990/rainbow', {'on_ft': 'clojure'})
+  call dein#add('tmhedberg/SimpylFold', {'on_ft': 'python'})
 
   " Global tools
   call dein#add('neomake/neomake')
@@ -57,6 +60,7 @@ if dein#load_state('/Users/mikez/.local/share/dein')
   call dein#add('scrooloose/nerdtree')
   call dein#add('junegunn/fzf', { 'build': './install --all', 'merged': 0 })
   call dein#add('junegunn/fzf.vim', { 'depends': 'fzf' })
+  call dein#add('jreybert/vimagit')
 
   call dein#end()
   call dein#save_state()
@@ -96,7 +100,7 @@ setglobal tags-=./tags tags-=./tags; tags^=./tags;
 inoremap <C-U> <C-G>u<C-U>
 
 " Turn off highlighting of :set hlsearch
-nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+nnoremap <leader>th :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
 " Zoom / Restore window.
 function! s:ZoomToggle() abort
@@ -112,7 +116,6 @@ function! s:ZoomToggle() abort
 endfunction
 command! ZoomToggle call s:ZoomToggle()
 nnoremap <silent> <C-A> :ZoomToggle<CR>
-
 
 " Prevent word wrap on long lines
 set nowrap
@@ -146,19 +149,55 @@ endif
 nnoremap <F1> <nop>
 inoremap <F1> <nop>
 
+" Prevent me from closing all my splits, like a mo-ron
+nnoremap <C-W>o <nop>
+nnoremap <C-W><C-O> <nop>
+
+" Easy vim split movement
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Open tag in split
+nnoremap <leader>avt :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+nnoremap <leader>at :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+" map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+" map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+
+" let g:go_auto_sameids = 1
+" let g:go_auto_type_info = 1
+
+
+" Terminal should have no numbers
+autocmd TermOpen * setlocal nonumber norelativenumber
+autocmd BufRead COMMIT_EDITMSG setlocal spell spelllang=en_us
+" autocmd BufNewFile,BufRead *.md,*.mkd,*.markdown set spell spelllang=en_us
+
+nnoremap <leader>ts :set spell!<cr>
+" TODO: add more spelling mappings
+
 " {{{ neomake/neomake config
 augroup makers
   autocmd!
 augroup END
 autocmd makers BufWritePost * Neomake
-let g:neomake_phpstan_level=4
 " }}}
 
 " {{{ luochen1990/rainbow 'colored parens' config
 augroup coloredParens
   autocmd!
 augroup END
-autocmd coloredParens FileType clojure,json call rainbow#toggle()
+autocmd coloredParens FileType clojure call rainbow#toggle()
 " }}}
 
 " {{{ tpope/vim-fugitive config
@@ -217,32 +256,24 @@ nnoremap <silent> <Leader>ft :Ag<CR>
 nnoremap <silent> <Leader>fc :BCommits<CR>
 nnoremap <silent> <Leader>fm :Marks<CR>
 nnoremap <silent> <Leader>fl :Lines<CR>
+nnoremap <silent> <Leader>fw :Windows<CR>
+nnoremap <silent> <Leader>fb :Buffers<CR>
 " }}}
 
 " {{{ scrooloose/nerdtree
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-nnoremap <silent> <Leader>of :NERDTreeToggle<CR>
+nnoremap <silent> <Leader>tf :NERDTreeToggle<CR>
 " }}}
 
 " {{{ majutsushi/tagbar
-nnoremap <silent> <Leader>ot :TagbarToggle<CR>
+nnoremap <silent> <Leader>tt :TagbarToggle<CR>
 " }}}
 
 " {{{ Shougo/Deoplete
 set completeopt-=preview
 let g:deoplete#enable_at_startup=1
 let g:deoplete#sources={}
-let g:deoplete#sources.php=['buffer', 'padawan']
-" }}}
-
-" {{{ padawan-php/deoplete-padawan
-command! PadawanStart call deoplete#sources#padawan#StartServer()
-command! PadawanStop call deoplete#sources#padawan#StopServer()
-command! PadawanRestart call deoplete#sources#padawan#RestartServer()
-command! PadawanInstall call deoplete#sources#padawan#InstallServer()
-command! PadawanUpdate call deoplete#sources#padawan#UpdatePadawan()
-command! -bang PadawanGenerate call deoplete#sources#padawan#Generate(<bang>0)
 " }}}
 
 " {{{ morhetz/gruvbox Post colorscheme config
