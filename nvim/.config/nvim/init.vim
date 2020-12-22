@@ -8,14 +8,17 @@ scriptencoding utf-8
 " set shell=/bin/bash
 set shell=/usr/local/bin/bash
 
-set runtimepath+=/Users/mikezipf/.local/share/dein/repos/github.com/Shougo/dein.vim
+" Required:
+set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
+
+" :call dein#install()
 
 " Required:
-if dein#load_state('/Users/mikezipf/.local/share/dein')
-  call dein#begin('/Users/mikezipf/.local/share/dein')
+if dein#load_state('~/.cache/dein')
+  call dein#begin('~/.cache/dein')
 
   " Required:
-  call dein#add('/Users/mikezipf/.local/share/dein/repos/github.com/Shougo/dein.vim')
+  call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
 
   " Colorschemes:
   call dein#add('morhetz/gruvbox')
@@ -27,6 +30,8 @@ if dein#load_state('/Users/mikezipf/.local/share/dein')
   call dein#add('vim-scripts/txt.vim', {'on_ft': 'txt'})
   call dein#add('hdima/python-syntax', {'on_ft': 'python'})
   call dein#add('fatih/vim-go', {'on_ft': 'go'})
+  call dein#add('Kuniwak/vint', {'on_ft': 'vim'})
+  call dein#add('posva/vim-vue')
 
   " Language specific tools
   call dein#add('tmhedberg/SimpylFold', {'on_ft': 'python'})
@@ -46,6 +51,8 @@ if dein#load_state('/Users/mikezipf/.local/share/dein')
   call dein#add('scrooloose/nerdtree')
   call dein#add('junegunn/fzf', { 'build': './install --all', 'merged': 0 })
   call dein#add('junegunn/fzf.vim', { 'depends': 'fzf' })
+  call dein#add('edkolev/tmuxline.vim')
+  call dein#add('chrisbra/vim-diff-enhanced')
 
   call dein#end()
   call dein#save_state()
@@ -58,6 +65,11 @@ syntax enable
 let g:gruvbox_contrast_dark='soft'
 let g:gruvbox_italic=1
 " }}}
+
+" forces true color on, since vim can’t detect it within tmux
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors " 24-bit color
 
 colorscheme gruvbox
 
@@ -80,13 +92,20 @@ set shiftwidth=4 " Default Indent Settings
 set tabstop=4
 set expandtab
 set fillchars=vert:│,fold:┈,diff:┈ " Change vertical line to a solid pipe
-" set termguicolors " 24-bit color
+set undofile
+set directory^=~/.config/nvim/swap//
+set backupdir^=~/.config/nvim/backup//
+set undodir^=~/.config/nvim/undo//
+
+let g:python3_host_prog = '/Users/mikezipf/.pyenv/versions/py3nim/bin/python'
 
 setglobal tags-=./tags tags-=./tags; tags^=./tags;
 
+set diffopt+=internal,algorithm:patience
+
 inoremap <C-U> <C-G>u<C-U>
 
-" Dont open help menu with f1
+" Don't open help menu with f1
 nnoremap <F1> <nop>
 inoremap <F1> <nop>
 
@@ -106,10 +125,10 @@ nnoremap <leader>th :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-
 " Save write only file
 cnoremap w!! %!sudo tee > /dev/null %
 
-" set wildignore+=\*/node_modules/\*
+set wildignore+=\*/node_modules/\*
 
+" Use Ag over Grep
 if executable('ag')
-  " Use Ag over Grep
   set grepprg=ag\ --nogroup\ --nocolor
 endif
 
@@ -119,12 +138,41 @@ nnoremap <leader>at :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 
 " Terminal should have no numbers
 autocmd TermOpen * setlocal nonumber norelativenumber
+
 " Spell check text
 autocmd BufRead COMMIT_EDITMSG setlocal spell spelllang=en_us
 autocmd BufNewFile,BufRead *.md,*.mkd,*.markdown set spell spelllang=en_us
 
 nnoremap <leader>ts :set spell!<cr>
 " TODO: add more spelling mappings
+
+" {{{ Show trailing spaces
+function ShowSpaces(...)
+  let @/='\v(\s+$)|( +\ze\t)'
+  let oldhlsearch=&hlsearch
+  if !a:0
+    let &hlsearch=!&hlsearch
+  else
+    let &hlsearch=a:1
+  end
+  return oldhlsearch
+endfunction
+" }}}
+
+" {{{ Trim trailing space
+function TrimSpaces() range
+  let oldhlsearch=ShowSpaces(1)
+  execute a:firstline.",".a:lastline."substitute ///gec"
+  let &hlsearch=oldhlsearch
+endfunction
+" }}}
+
+" command -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
+" command -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
+" nnoremap <F12>     :ShowSpaces 1<CR>
+" nnoremap <S-F12>   m`:TrimSpaces<CR>``
+" vnoremap <S-F12>   :TrimSpaces<CR>
+
 
 " {{{ Zoom / Restore window function
 function! s:ZoomToggle() abort
@@ -160,13 +208,6 @@ augroup END
 autocmd makers BufWritePost * Neomake
 " }}}
 
-" {{{ luochen1990/rainbow 'colored parens' config
-augroup coloredParens
-  autocmd!
-augroup END
-autocmd coloredParens FileType clojure call rainbow#toggle()
-" }}}
-
 " {{{ tpope/vim-fugitive config
 nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gc :Gcommit<CR>
@@ -180,17 +221,6 @@ nnoremap <Leader>gl :Glog<CR>
 
 " {{{ Konfekt/FastFold config
 let g:php_folding=1
-" }}}
-
-" {{{ mxw/vim-jsx config
-let g:jsx_ext_required=0
-" }}}
-
-" {{{ StanAngeloff/php.vim config
-let g:php_sql_heredoc=0
-let g:sql_type_default='postgresql'
-let b:sql_type_override='postgresql'
-let g:php_html_load=0
 " }}}
 
 " {{{ itchyny/lightline.vim config
@@ -240,7 +270,9 @@ nnoremap <silent> <Leader>tt :TagbarToggle<CR>
 " {{{ Shougo/Deoplete
 set completeopt-=preview
 let g:deoplete#enable_at_startup=1
-let g:deoplete#sources={}
+" let g:deoplete#sources={}
+let g:deoplete#tag#cache_limit_size=5000000
+" let g:deoplete#sources._=['buffer', 'tag']
 " }}}
 
 " {{{ morhetz/gruvbox Post colorscheme config
